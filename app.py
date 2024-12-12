@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://grade.rayhanm.com", "https://presgrading.vercel.app/"],
+        "origins": ["https://grading.rayhanm.com"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"],
         "supports_credentials": True
