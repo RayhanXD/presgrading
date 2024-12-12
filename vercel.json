@@ -9,7 +9,12 @@
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "app.py"
+        "dest": "app.py",
+        "headers": {
+          "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+          "X-Frame-Options": "DENY",
+          "X-Content-Type-Options": "nosniff"
+        }
       }
     ]
-  }
+}

@@ -3,7 +3,20 @@ from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/*": {
+        "origins": ["https://grade.rayhanm.com", "https://presgrading.vercel.app/"],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"],
+        "supports_credentials": True
+    }
+})
+
+@app.after_request
+def add_security_headers(response):
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    return response
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
