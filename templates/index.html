@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation Grading Form</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --background-color: #f5f7fa;
+            --border-color: #e1e8ed;
+            --text-color: #34495e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 1.5em;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.5em;
+        }
+
+        .form-container {
+            background: white;
+            padding: 2em;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5em;
+            position: relative;
+        }
+
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5em;
+            margin-bottom: 2em;
+            padding: 1.5em;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input[type="number"], input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="number"]:focus, input[type="email"]:focus, textarea:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            height: 120px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1em;
+        }
+
+        .feedback-section {
+            margin-top: 2em;
+            background: white;
+            padding: 1.5em;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 2em;
+            padding: 2em;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .result h2 {
+            color: var(--primary-color);
+            margin-bottom: 1em;
+        }
+
+        .total-score {
+            font-size: 2.5em;
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin: 0.5em 0;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-weight: 600;
+            margin: 1em 0;
+        }
+
+        .grade-another {
+            display: inline-block;
+            margin-top: 1em;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .grade-another:hover {
+            background-color: #2980b9;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            color: var(--primary-color);
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <h1>Presentation Grading Form</h1>
+
+    {% if submitted %}
+        <div class="result">
+            <h2>Grading Results</h2>
+            <div class="total-score">{{ total_score }}/100</div>
+            {% if email_sent %}
+                <p class="success-message">✓ Feedback has been sent successfully!</p>
+            {% else %}
+                <p class="error-message">⚠ Error sending feedback. Please try again.</p>
+            {% endif %}
+            <a href="{{ url_for('index') }}" class="grade-another">Grade Another Presentation</a>
+        </div>
+    {% else %}
+        <form method="POST" class="form-container">
+            <div class="form-section">
+                <div class="section-title">Introduction and Structure</div>
+                <div class="form-group">
+                    <label for="strong_introduction">Strong Introduction (out of 15)</label>
+                    <input type="number" id="strong_introduction" name="strong_introduction" min="0" max="15" required>
+                </div>
+                <div class="form-group">
+                    <label for="obvious_transitions">Obvious Transitions (out of 5)</label>
+                    <input type="number" id="obvious_transitions" name="obvious_transitions" min="0" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="organization">Organization (out of 10)</label>
+                    <input type="number" id="organization" name="organization" min="0" max="10" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Content and Delivery</div>
+                <div class="form-group">
+                    <label for="research_explained">Research Explanation (out of 10)</label>
+                    <input type="number" id="research_explained" name="research_explained" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="audio_visual">Audio/Visual Quality (out of 10)</label>
+                    <input type="number" id="audio_visual" name="audio_visual" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery">Delivery (out of 10)</label>
+                    <input type="number" id="delivery" name="delivery" min="0" max="10" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Professional Presentation</div>
+                <div class="form-group">
+                    <label for="vocalized_pauses">Vocalized Pauses (out of 5)</label>
+                    <input type="number" id="vocalized_pauses" name="vocalized_pauses" min="0" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="professional_dress">Professional Dress (out of 5)</label>
+                    <input type="number" id="professional_dress" name="professional_dress" min="0" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="quote">Quote Usage (out of 5)</label>
+                    <input type="number" id="quote" name="quote" min="0" max="5" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Overall Execution</div>
+                <div class="form-group">
+                    <label for="conclusion">Conclusion (out of 10)</label>
+                    <input type="number" id="conclusion" name="conclusion" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="proper_timing">Proper Timing (out of 5)</label>
+                    <input type="number" id="proper_timing" name="proper_timing" min="0" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="preparation_evident">Preparation Evidence (out of 10)</label>
+                    <input type="number" id="preparation_evident" name="preparation_evident" min="0" max="10" required>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="form-group">
+                    <label for="student_email">Student Email</label>
+                    <input type="email" id="student_email" name="student_email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="compliments">Compliments</label>
+                    <textarea id="compliments" name="compliments" required placeholder="Enter positive feedback about the presentation..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="suggestions">Suggestions for Improvement</label>
+                    <textarea id="suggestions" name="suggestions" required placeholder="Enter constructive feedback for improvement..."></textarea>
+                </div>
+            </div>
+
+            <button type="submit">Submit Evaluation</button>
+        </form>
+    {% endif %}
+</body>
+</html>
