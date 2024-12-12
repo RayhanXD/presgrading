@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
+from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -66,5 +68,6 @@ def trigger_retool_workflow(student_email, total_score, compliments, suggestions
         print(f"Error triggering workflow: {e}")
         return False
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/health')
+def health_check():
+    return {"status": "healthy"}, 200
