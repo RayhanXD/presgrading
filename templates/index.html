@@ -4,170 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presentation Grading Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #2ecc71;
-            --background-color: #f5f7fa;
-            --border-color: #e1e8ed;
-            --text-color: #34495e;
+            --primary-color: #000000;
+            --secondary-color: #ea817a;
+            --background-color: #f7fafc;
+            --border-color: #e2e8f0;
+            --text-color: #2d3748;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 900px;
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 30px;
+            padding: 40px 20px;
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
         }
 
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            opacity: 0.2;
+        }
+
         h1 {
             color: var(--primary-color);
             text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 1.5em;
-            border-bottom: 3px solid var(--secondary-color);
-            padding-bottom: 0.5em;
+            font-size: 48px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .form-container {
-            background: white;
-            padding: 2em;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .form-group {
-            margin-bottom: 1.5em;
-            position: relative;
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 40px rgba(0, 0, 0, 0.15);
         }
 
         .form-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5em;
-            margin-bottom: 2em;
-            padding: 1.5em;
-            background: #f8f9fa;
-            border-radius: 8px;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            transition: color 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 0.95em;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s ease;
         }
 
-        input[type="number"], input[type="email"] {
+        input[type="number"], input[type="email"], textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 1em;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.5);
         }
 
         input[type="number"]:focus, input[type="email"]:focus, textarea:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
             outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
         }
 
         textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
             height: 120px;
             resize: vertical;
-            font-family: inherit;
-            font-size: 1em;
-        }
-
-        .feedback-section {
-            margin-top: 2em;
-            background: white;
-            padding: 1.5em;
-            border-radius: 8px;
         }
 
         button {
-            background-color: var(--secondary-color);
+            background-color: var(--primary-color);
             color: white;
             padding: 14px 28px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 500;
             width: 100%;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
+            background-color: var(--secondary-color);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
         }
 
         .result {
-            margin-top: 2em;
-            padding: 2em;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .result h2 {
             color: var(--primary-color);
-            margin-bottom: 1em;
+            margin-bottom: 20px;
         }
 
         .total-score {
-            font-size: 2.5em;
-            color: var(--secondary-color);
-            font-weight: bold;
-            margin: 0.5em 0;
+            font-size: 64px;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .success-message {
-            color: var(--success-color);
-            font-weight: 600;
-            margin: 1em 0;
+            color: #38a169;
+            font-weight: 500;
+            margin: 20px 0;
         }
 
         .grade-another {
             display: inline-block;
-            margin-top: 1em;
-            padding: 10px 20px;
-            background-color: var(--secondary-color);
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
             color: white;
             text-decoration: none;
-            border-radius: 6px;
-            transition: background-color 0.3s;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
         .grade-another:hover {
-            background-color: #2980b9;
-        }
-
-        .section-title {
-            grid-column: 1 / -1;
-            color: var(--primary-color);
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 1em;
-            padding-bottom: 0.5em;
-            border-bottom: 2px solid var(--border-color);
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
+    <div class="background"></div>
     <h1>Presentation Grading Form</h1>
 
     {% if submitted %}
@@ -202,7 +248,7 @@
             <div class="form-section">
                 <div class="section-title">Content and Delivery</div>
                 <div class="form-group">
-                    <label for="research_explained">Research Explanation (out of 10)</label>
+                    <labelfor="research_explained">Research Explanation (out of 10)</label>
                     <input type="number" id="research_explained" name="research_explained" min="0" max="10" required>
                 </div>
                 <div class="form-group">
@@ -247,7 +293,8 @@
                 </div>
             </div>
 
-            <div class="feedback-section">
+            <div class="form-section">
+                <div class="section-title">Feedback</div>
                 <div class="form-group">
                     <label for="student_email">Student Email</label>
                     <input type="email" id="student_email" name="student_email" required>
@@ -267,5 +314,22 @@
             <button type="submit">Submit Evaluation</button>
         </form>
     {% endif %}
+    <script>
+        document.querySelectorAll('input[type="number"], input[type="email"], textarea').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.parentElement.querySelector('label').style.color = '#4299e1';
+            });
+            element.addEventListener('blur', function() {
+                this.parentElement.querySelector('label').style.color = '';
+            });
+        });
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.querySelector('button').classList.add('clicked');
+            setTimeout(() => this.submit(), 300);
+        });
+    </script>
 </body>
 </html>
+

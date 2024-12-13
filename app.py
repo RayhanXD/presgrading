@@ -1,11 +1,22 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_cors import CORS
 import requests
+from functools import wraps
 
 app = Flask(__name__)
+app.secret_key = 'presgrade2024'
+app.config.update(
+    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+    PERMANENT_SESSION_LIFETIME=1800,
+    SESSION_COOKIE_NAME='presgrade_session'
+)
+SECRET_KEY = "pres2024"
+
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://grading.rayhanm.com"],
+        "origins": ["https://grade.rayhanm.com", "http://localhost:5000"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"],
         "supports_credentials": True
@@ -16,9 +27,37 @@ CORS(app, resources={
 def add_security_headers(response):
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
     return response
 
-@app.route('/', methods=['GET', 'POST'])
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('authenticated'):
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated
+
+@app.route('/')
+def default_route():
+    if not session.get('authenticated'):
+        return redirect(url_for('login'))
+    return redirect(url_for('index'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if session.get('authenticated'):
+        return redirect(url_for('index'))
+        
+    if request.method == 'POST':
+        if request.form.get('secret_key') == SECRET_KEY:
+            session['authenticated'] = True
+            return redirect(url_for('index'))
+        return render_template('login.html', error=True)
+    return render_template('login.html', error=False)
+
+@app.route('/grading', methods=['GET', 'POST'])
+@requires_auth
 def index():
     if request.method == 'POST':
         scores = {
@@ -41,7 +80,6 @@ def index():
         compliments = request.form.get('compliments', '')
         suggestions = request.form.get('suggestions', '')
 
-        # Trigger email workflow
         email_sent = trigger_retool_workflow(
             student_email,
             total_score,
@@ -49,9 +87,7 @@ def index():
             suggestions,
             scores
         )
-
         return render_template('index.html', submitted=True, total_score=total_score, email_sent=email_sent)
-
     return render_template('index.html', submitted=False)
 
 def trigger_retool_workflow(student_email, total_score, compliments, suggestions, scores):
@@ -84,3 +120,11 @@ def trigger_retool_workflow(student_email, total_score, compliments, suggestions
 @app.route('/health')
 def health_check():
     return {"status": "healthy"}, 200
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
