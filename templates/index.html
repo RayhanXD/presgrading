@@ -225,7 +225,7 @@
             {% else %}
                 <p class="error-message">⚠ Error sending feedback. Please try again.</p>
             {% endif %}
-            <a href="{{ url_for('index') }}" class="grade-another">Grade Another Presentation</a>
+            <a href="{{ url_for('grading') }}" class="grade-another">Grade Another Presentation</a>        
         </div>
     {% else %}
         <form method="POST" class="form-container">
