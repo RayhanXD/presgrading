@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Required</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(45deg, rgba(0,0,0,0.2), rgba(234, 129, 122, 0.2));            
+            color: #2d3748;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 320px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 40px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #000000;
+        }
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.5);
+            box-sizing: border-box;
+        }
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #ea817a;
+            transform: translateY(-2px);
+        }
+        .error-message {
+            color: #e53e3e;
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Authentication Required</h1>
+        {% if error %}
+            <p class="error-message">Invalid secret key. Please try again.</p>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <input type="password" id="secret_key" name="secret_key" placeholder="Enter secret key" required autofocus>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
