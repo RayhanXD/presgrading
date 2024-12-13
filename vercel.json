@@ -1,21 +1,22 @@
 {
-  "version": 2,
-  "builds": [
+    "version": 2,
+    "builds": [
       {
-          "src": "app.py",
-          "use": "@vercel/python"
+        "src": "app.py",
+        "use": "@vercel/python"
       }
-  ],
-  "routes": [
+    ],
+    "routes": [
       {
-          "src": "/(.*)",
-          "dest": "app.py"
+        "src": "/(.*)",
+        "dest": "app.py",
+        "headers": {
+          "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+          "X-Frame-Options": "DENY",
+          "X-Content-Type-Options": "nosniff",
+          "X-XSS-Protection": "1; mode=block",
+          "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
       }
-  ],
-  "functions": {
-      "app.py": {
-          "memory": 1024,
-          "maxDuration": 10
-      }
-  }
+    ]
 }
